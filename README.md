@@ -1,3 +1,3 @@
 # odin-tictactoe
 
-A JavaScript-based Tic Tac Toe game. This project will use `Factory Functions` and the `Module Pattern` as the main design pattern(s).
+A JavaScript-based Tic Tac Toe game. This project uses the `Factory Functions` and/or the `Module Pattern (IIFE)` as the main design pattern(s).
