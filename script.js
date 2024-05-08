@@ -1,11 +1,12 @@
 const Gameboard = (() => {
 	const rows = 3;
 	const cols = 3;
-	// const board = [
-	// 	["", "", ""],
-	// 	["", "", ""],
-	// 	["", "", ""],
-	// ];
+	// board: empty
+	const board = [
+		["", "", ""],
+		["", "", ""],
+		["", "", ""],
+	];
 
 	// board: O winning
 	// const board = [
@@ -22,11 +23,11 @@ const Gameboard = (() => {
 	// ];
 
 	// board: tie
-	const board = [
-		["X", "O", "X"],
-		["X", "O", "O"],
-		["O", "X", "X"],
-	];
+	// const board = [
+	// 	["X", "O", "X"],
+	// 	["X", "O", "O"],
+	// 	["O", "X", "X"],
+	// ];
 
 	const getRows = () => rows;
 	const getCols = () => cols;
@@ -58,6 +59,17 @@ const Gameboard = (() => {
 		console.log(boardString);
 	};
 
+	const checkFinished = () => {
+		for (let row = 0; row < rows; row++) {
+			for (let col = 0; col < cols; col++) {
+				if (getCell(row, col) === "") {
+					return false;
+				}
+			}
+		}
+		return true;
+	};
+
 	return {
 		getRows,
 		getCols,
@@ -65,6 +77,7 @@ const Gameboard = (() => {
 		getCell,
 		setSpecificCell,
 		printBoard,
+		checkFinished,
 	};
 })();
 
@@ -109,11 +122,16 @@ function GameController() {
 	const setMove = (row, col) => {
 		board.setSpecificCell(row, col, currentPlayer.getSign());
 		board.printBoard();
-		switchCurrentPlayer();
+		// TODO: call gameOver() here when it's finished
+		if (checkWinner() === null) {
+			switchCurrentPlayer();
+		} else {
+			// game over
+			console.log(`Winner is ${checkWinner()}`);
+		}
 	};
 
-	// TODO: determine game over situation(s) (one player wins, tie)
-	// this is terribleeeeeee and shouldnt be hardcoded but whatever (maybe ill fix it later)
+	// this is terrible & shouldn't be hardcoded but whatever (maybe i'll fix it later)
 	const checkWinner = () => {
 		// check for horizontal winner
 		for (let row = 0; row < rows; row++) {
@@ -156,6 +174,9 @@ function GameController() {
 
 		return null;
 	};
+
+	// TODO: game over function
+	const checkGameOver = () => {};
 
 	// TODO: remove "board" later when done debugging
 	return { getCurrentPlayer, switchCurrentPlayer, setMove, checkWinner, board };
