@@ -4,7 +4,7 @@ A JavaScript-based Tic Tac Toe game. This project will use `Factory Functions` a
 
 ## To-do
 
-- [ ] Initial CSS stuff
+- [x] Initial CSS stuff
 - [ ] Display controller (`displayController()`)
 - [ ] Function(s) that allow players to add marks to a specific spot on the board by interacting with the appropriate DOM elements
 - [ ] Add a display element that shows the results upon game end
