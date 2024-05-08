@@ -81,7 +81,6 @@ const Gameboard = (() => {
 	};
 })();
 
-// TODO: game controller; controlling the game state and flow
 function GameController() {
 	const board = Gameboard;
 	// for checkWinner
@@ -104,7 +103,6 @@ function GameController() {
 	let players = [Player("Player 1", "X"), Player("Player 2", "O")];
 	let currentPlayer = players[0];
 	const getCurrentPlayer = () => currentPlayer;
-	// TODO: maybe make this shorter later using ternary operators because this is way too long
 	const switchCurrentPlayer = () => {
 		if (currentPlayer === players[0]) {
 			currentPlayer = players[1];
@@ -214,9 +212,11 @@ function GameController() {
 		}
 	};
 
-	// TODO: remove "board" later when done debugging
-	return { getCurrentPlayer, switchCurrentPlayer, setMove, checkWinner, board };
+	return { getCurrentPlayer, switchCurrentPlayer, setMove, checkWinner };
 }
+
+// TODO: displayController() - will handle the display/DOM logic of the game
+function displayController() {}
 
 const game = GameController();
 game.setMove();
