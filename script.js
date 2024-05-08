@@ -118,8 +118,8 @@ function GameController() {
 	};
 
 	const setMove = () => {
-		let row = prompt("Enter row number:");
-		let col = prompt("Enter col number:");
+		// let row = prompt("Enter row number:");
+		// let col = prompt("Enter col number:");
 		if (
 			row < rows &&
 			col < cols &&
