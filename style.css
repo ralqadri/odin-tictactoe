@@ -63,12 +63,12 @@ h1 {
 	border: 3px solid var(--amber-600);
 
 	display: grid;
-	/* gap: 1px; */
 	grid-template-columns: repeat(3, 1fr);
 	grid-template-rows: repeat(3, 1fr);
 
-	width: 300px;
-	height: 300px;
+	/* TODO: maybe fix these into flexible widths later */
+	width: 450px;
+	height: 450px;
 }
 
 .cell {

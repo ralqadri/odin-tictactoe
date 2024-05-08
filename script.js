@@ -81,6 +81,7 @@ const Gameboard = (() => {
 	};
 })();
 
+// TODO: refactor for DOM-based game
 function GameController() {
 	const board = Gameboard;
 	// for checkWinner
@@ -117,7 +118,7 @@ function GameController() {
 		}
 	};
 
-	const setMove = () => {
+	const setMove = (row, col) => {
 		// let row = prompt("Enter row number:");
 		// let col = prompt("Enter col number:");
 		if (
@@ -126,12 +127,18 @@ function GameController() {
 			board.setSpecificCell(row, col, currentPlayer.getSign())
 		) {
 			board.printBoard();
+			document.querySelector(
+				`[data-row="${row}"][data-col="${col}"]`
+			).textContent = currentPlayer.getSign();
+
+			// TODO: Refactor game over and winning condition for DOM-based
 			if (!gameOver()) {
 				switchCurrentPlayer();
 			} else {
 				let winner = checkWinner();
 				declareWinner(winner);
 			}
+			// TODO: Remove all of these since DOM-based game won't have this error soon
 		} else if (row > 3) {
 			console.log(`There is no Row ${row} silly!`);
 		} else if (col > 3) {
@@ -139,7 +146,6 @@ function GameController() {
 		} else {
 			console.log(`Cell [${row}][${col}] is already chosen by another player!`);
 		}
-		setMove();
 	};
 
 	// this is terrible & shouldn't be hardcoded but whatever (maybe i'll fix it later)
@@ -216,7 +222,21 @@ function GameController() {
 }
 
 // TODO: displayController() - will handle the display/DOM logic of the game
-function displayController() {}
+function displayController() {
+	const cellElements = document.querySelectorAll(".cell");
+
+	console.log(cellElements);
+
+	cellElements.forEach((cell) =>
+		cell.addEventListener("click", (e) => {
+			game.setMove(cell.dataset.row, cell.dataset.col);
+			console.log(`Clicked: (${cell.dataset.row},${cell.dataset.col})`);
+		})
+	);
+
+	// pick out individual cells:
+	// document.querySelector(`[data-row="x"][data-col="y"]`)
+}
 
 const game = GameController();
-game.setMove();
+const display = displayController();
