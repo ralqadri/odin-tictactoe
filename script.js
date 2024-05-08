@@ -37,9 +37,9 @@ const Gameboard = (() => {
 	const setSpecificCell = (row, col, sign) => {
 		if (getCell(row, col) === "") {
 			board[row][col] = sign;
+			return true;
 		} else {
-			// TODO: handle player switching when cell cannot be played
-			console.log(`Cell [${row}][${col}] cannot be played!`);
+			return false;
 		}
 	};
 
@@ -119,16 +119,29 @@ function GameController() {
 		}
 	};
 
-	const setMove = (row, col) => {
-		board.setSpecificCell(row, col, currentPlayer.getSign());
-		board.printBoard();
-		// TODO: call gameOver() here when it's finished
-		if (checkWinner() === null) {
-			switchCurrentPlayer();
+	const setMove = () => {
+		let row = prompt("Enter row number:");
+		let col = prompt("Enter col number:");
+		if (
+			row < rows &&
+			col < cols &&
+			board.setSpecificCell(row, col, currentPlayer.getSign())
+		) {
+			board.printBoard();
+			if (!gameOver()) {
+				switchCurrentPlayer();
+			} else {
+				let winner = checkWinner();
+				declareWinner(winner);
+			}
+		} else if (row > 3) {
+			console.log(`There is no Row ${row} silly!`);
+		} else if (col > 3) {
+			console.log(`There is no Column ${col} silly!`);
 		} else {
-			// game over
-			console.log(`Winner is ${checkWinner()}`);
+			console.log(`Cell [${row}][${col}] is already chosen by another player!`);
 		}
+		setMove();
 	};
 
 	// this is terrible & shouldn't be hardcoded but whatever (maybe i'll fix it later)
@@ -175,11 +188,35 @@ function GameController() {
 		return null;
 	};
 
-	// TODO: game over function
-	const checkGameOver = () => {};
+	const gameOver = () => {
+		if (board.checkFinished() && checkWinner() === null) {
+			return true;
+		}
+
+		if (checkWinner() === null) {
+			return false;
+		} else {
+			return true;
+		}
+	};
+
+	const findPlayerBySign = (sign) => {
+		return players.find((player) => player.getSign() === sign);
+	};
+
+	const declareWinner = (winnersign) => {
+		const winner = findPlayerBySign(winnersign);
+
+		if (winnersign !== null) {
+			console.log(`Winner is "${winner.getName()} (${winner.getSign()})"!`);
+		} else {
+			console.log(`The game is tied!`);
+		}
+	};
 
 	// TODO: remove "board" later when done debugging
 	return { getCurrentPlayer, switchCurrentPlayer, setMove, checkWinner, board };
 }
 
 const game = GameController();
+game.setMove();
