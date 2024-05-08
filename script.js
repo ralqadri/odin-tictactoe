@@ -61,13 +61,21 @@ function GameController() {
 	};
 
 	let players = [Player("Player 1", "X"), Player("Player 2", "O")];
-
 	let currentPlayer = players[0];
-
 	const getCurrentPlayer = () => currentPlayer;
-
+	// TODO: maybe make this shorter later using ternary operators because this is way too long
 	const switchCurrentPlayer = () => {
-		currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
+		if (currentPlayer === players[0]) {
+			currentPlayer = players[1];
+			console.log(
+				`Player is now passed to ${currentPlayer.getName()} (${currentPlayer.getSign()})`
+			);
+		} else {
+			currentPlayer = players[0];
+			console.log(
+				`Player is now passed to ${currentPlayer.getName()} (${currentPlayer.getSign()})`
+			);
+		}
 	};
 
 	const setMove = (row, col) => {
