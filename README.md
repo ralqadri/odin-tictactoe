@@ -10,6 +10,6 @@ A JavaScript-based Tic Tac Toe game. This project will use `Factory Functions` a
   - [x] Show status of the game
     - [x] Elaborate which player's turns each time
     - [x] Add a display element that shows the results upon game end
-  - [x] Remove the ability to make a move when game ends
-  - [ ] Clean up the interface to allow players to put in their names
-  - [x] Include a button to start/restart the game
+- [x] Remove the ability to make a move when game ends
+- [ ] Clean up the interface to allow players to put in their names
+- [x] Include a button to start/restart the game
