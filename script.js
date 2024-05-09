@@ -84,7 +84,7 @@ const Gameboard = (() => {
 // TODO: refactor for DOM-based game
 function GameController() {
 	const board = Gameboard;
-	// for checkWinner
+	// for getWinner
 	const rows = Gameboard.getRows();
 	const cols = Gameboard.getCols();
 
@@ -107,14 +107,8 @@ function GameController() {
 	const switchCurrentPlayer = () => {
 		if (currentPlayer === players[0]) {
 			currentPlayer = players[1];
-			console.log(
-				`Player is now passed to ${currentPlayer.getName()} (${currentPlayer.getSign()})`
-			);
 		} else {
 			currentPlayer = players[0];
-			console.log(
-				`Player is now passed to ${currentPlayer.getName()} (${currentPlayer.getSign()})`
-			);
 		}
 	};
 
@@ -126,30 +120,23 @@ function GameController() {
 			col < cols &&
 			board.setSpecificCell(row, col, currentPlayer.getSign())
 		) {
-			board.printBoard();
 			document.querySelector(
 				`[data-row="${row}"][data-col="${col}"]`
 			).textContent = currentPlayer.getSign();
 
 			// TODO: Refactor game over and winning condition for DOM-based
-			if (!gameOver()) {
+			if (!isOver()) {
 				switchCurrentPlayer();
 			} else {
-				let winner = checkWinner();
-				declareWinner(winner);
+				let winner = getWinner();
 			}
-			// TODO: Remove all of these since DOM-based game won't have this error soon
-		} else if (row > 3) {
-			console.log(`There is no Row ${row} silly!`);
-		} else if (col > 3) {
-			console.log(`There is no Column ${col} silly!`);
-		} else {
-			console.log(`Cell [${row}][${col}] is already chosen by another player!`);
+
+			display.showStatus(isOver());
 		}
 	};
 
 	// this is terrible & shouldn't be hardcoded but whatever (maybe i'll fix it later)
-	const checkWinner = () => {
+	const getWinner = () => {
 		// check for horizontal winner
 		for (let row = 0; row < rows; row++) {
 			if (
@@ -157,7 +144,7 @@ function GameController() {
 				board.getCell(row, 0) === board.getCell(row, 1) &&
 				board.getCell(row, 0) === board.getCell(row, 2)
 			) {
-				return board.getCell(row, 0);
+				return findPlayerBySign(board.getCell(row, 0));
 			}
 		}
 
@@ -168,7 +155,7 @@ function GameController() {
 				board.getCell(0, col) === board.getCell(1, col) &&
 				board.getCell(0, col) === board.getCell(2, col)
 			) {
-				return board.getCell(0, col);
+				return findPlayerBySign(board.getCell(0, col));
 			}
 		}
 
@@ -178,7 +165,7 @@ function GameController() {
 			board.getCell(0, 0) === board.getCell(1, 1) &&
 			board.getCell(0, 0) === board.getCell(2, 2)
 		) {
-			return board.getCell(0, 0);
+			return findPlayerBySign(board.getCell(0, 0));
 		}
 
 		if (
@@ -186,18 +173,18 @@ function GameController() {
 			board.getCell(0, 2) === board.getCell(1, 1) &&
 			board.getCell(0, 2) === board.getCell(2, 0)
 		) {
-			return board.getCell(0, 2);
+			return findPlayerBySign(board.getCell(0, 2));
 		}
 
 		return null;
 	};
 
-	const gameOver = () => {
-		if (board.checkFinished() && checkWinner() === null) {
+	const isOver = () => {
+		if (board.checkFinished() && getWinner() === null) {
 			return true;
 		}
 
-		if (checkWinner() === null) {
+		if (getWinner() === null) {
 			return false;
 		} else {
 			return true;
@@ -208,17 +195,12 @@ function GameController() {
 		return players.find((player) => player.getSign() === sign);
 	};
 
-	const declareWinner = (winnersign) => {
-		const winner = findPlayerBySign(winnersign);
-
-		if (winnersign !== null) {
-			console.log(`Winner is "${winner.getName()} (${winner.getSign()})"!`);
-		} else {
-			console.log(`The game is tied!`);
-		}
+	return {
+		getCurrentPlayer,
+		switchCurrentPlayer,
+		setMove,
+		getWinner,
 	};
-
-	return { getCurrentPlayer, switchCurrentPlayer, setMove, checkWinner };
 }
 
 // TODO: displayController() - will handle the display/DOM logic of the game
@@ -230,13 +212,28 @@ function displayController() {
 	cellElements.forEach((cell) =>
 		cell.addEventListener("click", (e) => {
 			game.setMove(cell.dataset.row, cell.dataset.col);
-			console.log(`Clicked: (${cell.dataset.row},${cell.dataset.col})`);
 		})
 	);
 
-	// pick out individual cells:
-	// document.querySelector(`[data-row="x"][data-col="y"]`)
+	const showStatus = (isOver) => {
+		const gameStatus = document.querySelector(".status");
+		if (isOver) {
+			winner = game.getWinner();
+			if (winner !== null) {
+				gameStatus.textContent = `${winner.getName()} (${winner.getSign()}) has won!`;
+			} else {
+				gameStatus.textContent = `The game is tied!`;
+			}
+		} else {
+			let currentPlayer = game.getCurrentPlayer();
+			gameStatus.textContent = `${currentPlayer.getName()} (${currentPlayer.getSign()})'s  turn`;
+		}
+	};
+
+	return { showStatus };
 }
 
 const game = GameController();
 const display = displayController();
+
+display.showStatus();

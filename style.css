@@ -13,6 +13,7 @@
 	--zinc-200: #e5e5e5;
 
 	--amber-50: #fffbeb;
+	--amber-200: #fde68a;
 	--amber-300: #fbbf24;
 	--amber-600: #d97706;
 	--amber-800: #9a3412;
@@ -44,6 +45,10 @@ body {
 }
 
 h1 {
+	margin: 0;
+	margin-top: 0.5rem;
+	margin-bottom: 2rem;
+
 	font-family: "Freeman", sans-serif;
 	font-size: 4em;
 	font-weight: 600;
@@ -80,13 +85,30 @@ h1 {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-wrap: wrap;
+
+	overflow: auto;
 
 	background-color: var(--amber-300);
 
 	font-family: "Gloria Hallelujah", cursive;
-	font-size: 2.5em;
+	font-size: 4em;
 	font-weight: 800;
-	color: var(--amber-600);
+	color: var(--amber-800);
 
 	cursor: pointer;
+}
+
+.cell:hover {
+	background: var(--amber-200);
+}
+
+.status {
+	margin: 1em;
+
+	font-size: 1.75rem;
+	font-family: "Inter", sans-serif;
+	font-weight: 600;
+
+	color: var(--amber-800);
 }
