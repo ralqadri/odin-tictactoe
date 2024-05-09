@@ -45,6 +45,11 @@ button {
 	--amber-900: #78350f;
 	--amber-950: #451a03;
 
+	--sky-200: #a5f3fc;
+	--sky-300: #7dd3fc;
+	--sky-600: #0284c7;
+	--sky-950: #082f49;
+
 	--background: var(--amber-50);
 }
 
@@ -133,7 +138,7 @@ h1 {
 }
 
 .status {
-	margin: 0.25em;
+	margin: 0.5em;
 
 	font-size: 1.75rem;
 	font-family: "Inter", sans-serif;
@@ -143,7 +148,7 @@ h1 {
 }
 
 .buttons {
-	margin: 2em;
+	margin: 0.5em;
 }
 
 .restart-btn {
@@ -158,4 +163,22 @@ h1 {
 	font-size: 2rem;
 
 	cursor: pointer;
+}
+
+.namechange-btn {
+	border: 3px solid var(--sky-600);
+	border-radius: 0.1em;
+
+	padding: 0.25rem 1rem;
+
+	background-color: var(--sky-300);
+	color: var(--sky-950);
+
+	font-size: 2rem;
+
+	cursor: pointer;
+}
+
+.namechange-btn:hover {
+	background-color: var(--sky-200);
 }

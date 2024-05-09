@@ -1,7 +1,6 @@
 const Gameboard = (() => {
 	const rows = 3;
 	const cols = 3;
-	// board: empty
 	const board = [
 		["", "", ""],
 		["", "", ""],
@@ -76,7 +75,7 @@ function GameController() {
 	const cols = Gameboard.getCols();
 
 	const Player = (name, sign) => {
-		const playerName = name;
+		let playerName = name;
 		const playerSign = sign;
 
 		const getName = () => playerName;
@@ -85,14 +84,16 @@ function GameController() {
 			playerName = newName;
 		};
 
-		return { getName, getSign };
+		return { getName, getSign, setName };
 	};
 
-	let players;
+	let players = [];
 	let currentPlayer;
 
 	const initializeGame = () => {
-		players = [Player("Player 1", "X"), Player("Player 2", "O")];
+		if (!players.length) {
+			players = [Player("Player 1", "X"), Player("Player 2", "O")];
+		}
 		currentPlayer = players[0];
 	};
 
@@ -108,6 +109,23 @@ function GameController() {
 		} else {
 			currentPlayer = players[0];
 		}
+	};
+
+	// LMFAO
+	const getNewNames = () => {
+		let newFirstPlayer = prompt("Enter (new) name for Player 1:");
+		let newSecondPlayer = prompt("Enter (new) name for Player 2:");
+
+		while (newFirstPlayer === null || newFirstPlayer === "") {
+			newFirstPlayer = prompt("Try again! Enter (new) name for Player 1:");
+		}
+
+		while (newSecondPlayer === null || newSecondPlayer === "") {
+			newSecondPlayer = prompt("Try again! Enter (new) name for Player 2:");
+		}
+
+		players[0].setName(newFirstPlayer);
+		players[1].setName(newSecondPlayer);
 	};
 
 	initializeGame();
@@ -195,6 +213,7 @@ function GameController() {
 	return {
 		getCurrentPlayer,
 		switchCurrentPlayer,
+		getNewNames,
 		setMove,
 		getWinner,
 		isOver,
@@ -238,6 +257,12 @@ function displayController() {
 		game.restartGame();
 		resetDisplay();
 		showStatus();
+	});
+
+	const changeNameButton = document.querySelector(".namechange-btn");
+	changeNameButton.addEventListener("click", (e) => {
+		game.getNewNames();
+		showStatus(game.isOver());
 	});
 
 	return { showStatus };
