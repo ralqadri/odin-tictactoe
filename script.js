@@ -8,27 +8,6 @@ const Gameboard = (() => {
 		["", "", ""],
 	];
 
-	// board: O winning
-	// const board = [
-	// 	["O", "X", "X"],
-	// 	["O", "O", "X"],
-	// 	["X", "O", "O"],
-	// ];
-
-	// board: X winning
-	// const board = [
-	// 	["X", "O", "O"],
-	// 	["X", "X", "O"],
-	// 	["O", "X", "X"],
-	// ];
-
-	// board: tie
-	// const board = [
-	// 	["X", "O", "X"],
-	// 	["X", "O", "O"],
-	// 	["O", "X", "X"],
-	// ];
-
 	const getRows = () => rows;
 	const getCols = () => cols;
 
@@ -70,18 +49,26 @@ const Gameboard = (() => {
 		return true;
 	};
 
+	const resetBoard = () => {
+		for (let row = 0; row < rows; row++) {
+			for (let col = 0; col < cols; col++) {
+				board[row][col] = "";
+			}
+		}
+	};
+
 	return {
 		getRows,
 		getCols,
 		getBoard,
 		getCell,
 		setSpecificCell,
-		printBoard,
 		checkFinished,
+		printBoard,
+		resetBoard,
 	};
 })();
 
-// TODO: refactor for DOM-based game
 function GameController() {
 	const board = Gameboard;
 	// for getWinner
@@ -101,8 +88,19 @@ function GameController() {
 		return { getName, getSign };
 	};
 
-	let players = [Player("Player 1", "X"), Player("Player 2", "O")];
-	let currentPlayer = players[0];
+	let players;
+	let currentPlayer;
+
+	const initializeGame = () => {
+		players = [Player("Player 1", "X"), Player("Player 2", "O")];
+		currentPlayer = players[0];
+	};
+
+	const restartGame = () => {
+		initializeGame();
+		board.resetBoard();
+	};
+
 	const getCurrentPlayer = () => currentPlayer;
 	const switchCurrentPlayer = () => {
 		if (currentPlayer === players[0]) {
@@ -112,9 +110,9 @@ function GameController() {
 		}
 	};
 
+	initializeGame();
+
 	const setMove = (row, col) => {
-		// let row = prompt("Enter row number:");
-		// let col = prompt("Enter col number:");
 		if (
 			row < rows &&
 			col < cols &&
@@ -124,7 +122,6 @@ function GameController() {
 				`[data-row="${row}"][data-col="${col}"]`
 			).textContent = currentPlayer.getSign();
 
-			// TODO: Refactor game over and winning condition for DOM-based
 			if (!isOver()) {
 				switchCurrentPlayer();
 			} else {
@@ -200,6 +197,8 @@ function GameController() {
 		switchCurrentPlayer,
 		setMove,
 		getWinner,
+		isOver,
+		restartGame,
 	};
 }
 
@@ -207,11 +206,11 @@ function GameController() {
 function displayController() {
 	const cellElements = document.querySelectorAll(".cell");
 
-	console.log(cellElements);
-
 	cellElements.forEach((cell) =>
 		cell.addEventListener("click", (e) => {
-			game.setMove(cell.dataset.row, cell.dataset.col);
+			if (!game.isOver()) {
+				game.setMove(cell.dataset.row, cell.dataset.col);
+			}
 		})
 	);
 
@@ -229,6 +228,17 @@ function displayController() {
 			gameStatus.textContent = `${currentPlayer.getName()} (${currentPlayer.getSign()})'s  turn`;
 		}
 	};
+
+	const resetDisplay = () => {
+		cellElements.forEach((cell) => (cell.textContent = ""));
+	};
+
+	const restartButton = document.querySelector(".restart-btn");
+	restartButton.addEventListener("click", (e) => {
+		game.restartGame();
+		resetDisplay();
+		showStatus();
+	});
 
 	return { showStatus };
 }
